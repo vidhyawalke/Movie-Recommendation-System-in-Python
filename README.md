@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="banner.png" alt="Movie Recommendation System" width="800"/>
+  <img src="banner.svg" alt="Movie Recommendation System in Python" width="100%"/>
 </p>
 
 <h1 align="center">🎬 Movie Recommendation System in Python</h1>
@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Python-3.9%2B-blue?style=flat-square&logo=python" />
+  <img src="https://img.shields.io/badge/Python-3.11%2B-blue?style=flat-square&logo=python" />
   <img src="https://img.shields.io/badge/scikit--learn-TF--IDF%20%7C%20Cosine%20Similarity-orange?style=flat-square&logo=scikit-learn" />
   <img src="https://img.shields.io/badge/Dataset-MovieLens%2025M-green?style=flat-square" />
   <img src="https://img.shields.io/badge/Notebook-Jupyter-F37626?style=flat-square&logo=jupyter" />
@@ -23,7 +23,7 @@
 
 This project implements a two-part interactive movie recommendation system entirely in Python. The first part is a **content-based search engine** that uses TF-IDF vectorisation and cosine similarity to match a typed movie title against a corpus of 62,423 entries in real time. The second part is a **collaborative filtering recommendation engine** that mines 25 million user ratings to surface films that are disproportionately popular among audiences who share the same taste as you.
 
-Both components are wired to live Jupyter widgets so the entire experience — from search to recommendation — updates as you type, with no manual cell re-execution required.
+Both components are wired to live Jupyter widgets so the entire experience, from search to recommendation, updates as you type with no manual cell re-execution required.
 
 ---
 
@@ -31,7 +31,7 @@ Both components are wired to live Jupyter widgets so the entire experience — f
 
 This project was guided by the structured walkthrough provided by **[Dataquest](https://www.dataquest.io/)** as part of their project-based learning curriculum:
 
-> [Build a Movie Recommendation System in Python](https://app.dataquest.io/c/93/m/99994/build-a-movie-recommendation-system-in-python/1/introduction) — Dataquest Intermediate Python Project (13 steps)
+> [Build a Movie Recommendation System in Python](https://app.dataquest.io/c/93/m/99994/build-a-movie-recommendation-system-in-python/1/introduction) — Dataquest Intermediate Python Project
 
 The dataset used throughout this project is the **MovieLens 25M** dataset, published and maintained by the GroupLens research group at the University of Minnesota:
 
@@ -44,12 +44,12 @@ The dataset used throughout this project is the **MovieLens 25M** dataset, publi
 | File | Description | Size |
 |------|-------------|------|
 | `movies.csv` | 62,423 movies with title and genre metadata | 3 MB |
-| `ratings.csv` | 25,000,095 ratings from 162,541 users (scale: 0.5 to 5.0) | 650 MB |
+| `ratings.csv` | 25,000,095 ratings from 162,541 users on a 0.5 to 5.0 scale | 650 MB |
 | `tags.csv` | User-generated tags applied to movies | 39 MB |
 | `genome-scores.csv` | Tag relevance scores for 13,816 movies | 435 MB |
 | `links.csv` | IMDb and TMDb identifiers for each movie | 1.4 MB |
 
-Download the full dataset as a single zip archive:
+Download the full dataset as a single archive from GroupLens:  
 [https://files.grouplens.org/datasets/movielens/ml-25m.zip](https://files.grouplens.org/datasets/movielens/ml-25m.zip)
 
 Place the extracted `ml-25m/` folder in the project root before running the notebook.
@@ -60,13 +60,13 @@ Place the extracted `ml-25m/` folder in the project root before running the note
 
 ```
 Movie Recommendation System in Python/
-├── movie_recommendations.ipynb   ← main notebook with all outputs
-├── banner.png                    ← project banner
-├── .gitignore                    ← excludes large dataset files
+├── movie_recommendations.ipynb   (main notebook with all rendered outputs)
+├── banner.svg                    (high-resolution vector banner)
+├── .gitignore                    (excludes ml-25m dataset files and cache)
 └── README.md
 ```
 
-The `ml-25m/` dataset folder is listed in `.gitignore` and is not committed to the repository. Reviewers must download it separately using the link above.
+The `ml-25m/` directory is registered in `.gitignore` and is not tracked in git due to file size limits.
 
 ---
 
@@ -76,7 +76,7 @@ The `ml-25m/` dataset folder is listed in `.gitignore` and is not committed to t
 
 **Data Cleaning with Regular Expressions**
 
-Movie titles in the dataset include year annotations in parentheses — for example, `Toy Story (1995)`. Before vectorisation, all non-alphanumeric characters (excluding spaces) are stripped using a regex substitution. This prevents punctuation from fragmenting tokens and ensures that the year is treated as a searchable term.
+Movie titles in the dataset include release year annotations in parentheses, such as `Toy Story (1995)`. Before vectorisation, all non-alphanumeric characters (excluding spaces) are removed using regex substitution. This prevents punctuation from fragmenting tokens while preserving the release year as an independent token.
 
 ```python
 import re
@@ -84,51 +84,51 @@ import re
 def clean_title(title: str) -> str:
     return re.sub(r"[^a-zA-Z0-9 ]", "", title)
 
-# "Toy Story (1995)"  ->  "Toy Story 1995"
+# Result: "Toy Story (1995)" becomes "Toy Story 1995"
 ```
 
 **TF-IDF Vectorisation**
 
-Cleaned titles are converted into sparse numerical vectors using scikit-learn's `TfidfVectorizer`. The `ngram_range=(1, 2)` parameter instructs the vectoriser to generate both unigrams and bigrams. This means the title *Toy Story 1995* yields individual tokens (`toy`, `story`, `1995`) as well as compound tokens (`toy story`, `story 1995`), substantially improving discrimination between similarly named films.
+Cleaned titles are converted into sparse numerical vectors using `TfidfVectorizer`. The parameter `ngram_range=(1, 2)` instructs the vectoriser to generate both unigrams and bigrams. The title *Toy Story 1995* generates unigrams (`toy`, `story`, `1995`) as well as bigrams (`toy story`, `story 1995`), substantially improving differentiation between films with similar wording.
 
 $$\text{TF-IDF}(t, d) = \text{TF}(t, d) \times \log\left(\frac{N}{\text{DF}(t)}\right)$$
 
-where $t$ is a term, $d$ is a document (title), $N$ is the total number of titles, and $\text{DF}(t)$ is the number of titles containing term $t$.
+Here $t$ represents a term, $d$ denotes a document (title), $N$ represents the total corpus size, and $\text{DF}(t)$ is the document frequency of term $t$.
 
 **Cosine Similarity Search**
 
-At query time the user's input is cleaned and transformed into the same vector space. Cosine similarity is computed between the query vector and every title vector in the matrix. The five titles with the highest similarity scores are returned.
+During search execution, the query string is cleaned and mapped into the fitted TF-IDF feature space. Cosine similarity is computed between the query vector and all matrix rows:
 
 $$\cos(\theta) = \frac{\mathbf{q} \cdot \mathbf{d}}{\|\mathbf{q}\| \|\mathbf{d}\|}$$
 
-A value of 1.0 indicates identical direction (perfect match); 0 indicates orthogonality (no shared terms).
+The top 5 titles ranked by similarity score are extracted efficiently in $O(n)$ time using `numpy.argpartition`.
 
 ### Part 2: Collaborative Filtering Recommendation Engine
 
-**Finding Similar Users**
+**Step 1: Identifying Similar Users**
 
-For a given target film, the system identifies every user who assigned it a rating strictly greater than 4.0 (a threshold that selects genuine enthusiasm rather than neutral approval). These users form the *similar user cohort*.
+For a chosen movie, the system queries all users who assigned it a rating strictly greater than 4.0. This isolates a cohort of users with demonstrated affinity for the title.
 
-**Candidate Movie Pool**
+**Step 2: Candidate Recommendation Pool**
 
-Among the similar user cohort, the system tallies every other highly-rated film and divides by cohort size to obtain a *similar user percentage* per movie. Only films cleared by more than 10% of the cohort are retained as candidates, filtering out noise from low-signal ratings.
+Among this cohort, all other films rated higher than 4.0 are aggregated. The frequency of each film is divided by the total count of similar users to determine the cohort endorsement percentage. Films endorsed by fewer than 10% of the cohort are filtered out to eliminate low-frequency noise.
 
-**Niche Scoring**
+**Step 3: Relative Score Computation**
 
-The same percentage is computed across the full user population for each candidate film. The two percentages are combined into a *recommendation score*:
+The endorsement percentage is also calculated across the global user population for each candidate film. Dividing the cohort percentage by the global percentage yields the recommendation score:
 
 $$\text{score}(m) = \frac{P(\text{similar users liked } m)}{P(\text{all users liked } m)}$$
 
-A high score indicates that a film is specifically overrepresented in the taste profile of people who liked the target — not merely a broadly popular title. The top 10 candidates by score are returned as final recommendations.
+A high score indicates that a film is disproportionately favoured by users who loved the target film, filtering out broadly popular blockbusters that lack topical specificity.
 
 ---
 
 ## Sample Output
 
-The following recommendations are produced when searching for **The Avengers (2012)**:
+Recommendations produced when searching for **The Avengers (2012)**:
 
-| Rank | Score | Title | Genres |
-|------|-------|-------|--------|
+| Rank | Recommendation Score | Title | Genres |
+|:---:|:---:|:---|:---|
 | 1 | 24.72 | Avengers, The (2012) | Action, Adventure, Sci-Fi, IMAX |
 | 2 | 19.61 | Thor: The Dark World (2013) | Action, Adventure, Fantasy, IMAX |
 | 3 | 19.49 | Avengers: Age of Ultron (2015) | Action, Adventure, Sci-Fi |
@@ -140,78 +140,76 @@ The following recommendations are produced when searching for **The Avengers (20
 | 9 | 15.87 | Ant-Man (2015) | Action, Adventure, Sci-Fi |
 | 10 | 15.65 | Iron Man 2 (2010) | Action, Adventure, Sci-Fi, Thriller |
 
-The score of 24.72 for The Avengers itself confirms the system is anchoring on the correct movie. All remaining recommendations are thematically coherent MCU titles — a strong validation of the collaborative filtering signal.
+The system anchors on *The Avengers* at rank 1 with score 24.72 and populates the remaining slots exclusively with interconnected Marvel Cinematic Universe films, validating the precision of the relative scoring metric.
 
 ---
 
 ## Quickstart
 
-**1. Clone the repository**
+**1. Clone Repository**
 
 ```bash
 git clone https://github.com/vidhyawalke/Movie-Recommendation-System-in-Python.git
 cd "Movie Recommendation System in Python"
 ```
 
-**2. Download the dataset**
+**2. Download Dataset**
 
 ```bash
-# Linux / macOS
+# macOS or Linux
 curl -O https://files.grouplens.org/datasets/movielens/ml-25m.zip
 unzip ml-25m.zip
 
-# Windows (PowerShell)
+# Windows PowerShell
 Invoke-WebRequest -Uri https://files.grouplens.org/datasets/movielens/ml-25m.zip -OutFile ml-25m.zip
 Expand-Archive ml-25m.zip
 ```
 
-**3. Install dependencies**
+**3. Install Dependencies**
 
 ```bash
 pip install pandas scikit-learn numpy ipywidgets notebook
 ```
 
-**4. Launch the notebook**
+**4. Run Jupyter Notebook**
 
 ```bash
 jupyter notebook movie_recommendations.ipynb
 ```
 
-Run all cells from top to bottom. The interactive search widget is in **Cell 5** and the full recommendation widget is in **Cell 9**.
+Execute cells sequentially. The interactive search widget is initialized in Cell 6, and the complete recommendation widget is in Cell 13.
 
 ---
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| Data manipulation | pandas |
-| Vectorisation | scikit-learn TfidfVectorizer |
-| Similarity computation | scikit-learn cosine_similarity |
-| Numerical operations | NumPy |
-| Interactive UI | ipywidgets |
-| Notebook environment | Jupyter Notebook |
+| Component | Technology | Role |
+|:---|:---|:---|
+| Corpus Processing | pandas | Data cleaning and tabular aggregation |
+| Vectorisation | scikit-learn | TfidfVectorizer with unigrams and bigrams |
+| Metric Computation | scikit-learn | Cosine similarity matrix evaluation |
+| Array Indexing | NumPy | Fast top-k partition via argpartition |
+| Interactive Interface | ipywidgets | Real-time text listening and reactive output |
+| Runtime Environment | Jupyter Notebook | Interactive execution and analysis |
 
 ---
 
-## Potential Extensions
+## Future Enhancements
 
-The scoring framework developed here is extensible in several directions:
-
-- **Genre-aware filtering**: Add a dropdown widget that filters recommendations by genre, using the pipe-delimited genre field already present in `movies.csv`.
-- **Tag-based content signals**: Incorporate `genome-scores.csv`, which provides continuous relevance scores for 1,128 tags across 13,816 movies, to weight the collaborative signal with semantic similarity.
-- **Matrix factorisation**: Replace the percentage-based heuristic with a proper latent factor model (e.g. SVD via `scipy.sparse.linalg`) for more generalised user-to-movie projections.
-- **Web deployment**: Wrap the two functions in a Streamlit or Gradio app for a shareable browser-based interface without requiring Jupyter.
+1. **Genre Filtering Controls**: Introduce a multi-select genre widget to narrow down collaborative filtering outputs by specific categories.
+2. **Tag Genome Integration**: Leverage `genome-scores.csv` to combine collaborative filtering signals with 1,128 semantic tag vectors.
+3. **Matrix Factorisation**: Implement Truncated SVD or Alternating Least Squares (ALS) to model latent user-item interaction spaces.
+4. **Standalone Web Application**: Package the inference pipeline into a lightweight Streamlit or FastAPI service for direct web deployment.
 
 ---
 
 ## Getting Help
 
-If you encounter issues or have questions, please open a [GitHub Issue](https://github.com/vidhyawalke/Movie-Recommendation-System-in-Python/issues).
+If you encounter issues or have questions, please open an issue in the [GitHub Issue Tracker](https://github.com/vidhyawalke/Movie-Recommendation-System-in-Python/issues).
 
 ---
 
 ## Maintainer
 
 Built and maintained by [Vidhya Walke](https://github.com/vidhyawalke).  
-Contributions, bug reports, and suggestions are welcome via pull request or issue.
+Contributions and feedback are welcome through pull requests and issues.
