@@ -9,13 +9,6 @@
   Real data. Real techniques. Production-ready notebook.
 </p>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3.11%2B-blue?style=flat-square&logo=python" />
-  <img src="https://img.shields.io/badge/scikit--learn-TF--IDF%20%7C%20Cosine%20Similarity-orange?style=flat-square&logo=scikit-learn" />
-  <img src="https://img.shields.io/badge/Dataset-MovieLens%2025M-green?style=flat-square" />
-  <img src="https://img.shields.io/badge/Notebook-Jupyter-F37626?style=flat-square&logo=jupyter" />
-  <img src="https://img.shields.io/badge/License-MIT-lightgrey?style=flat-square" />
-</p>
 
 ---
 

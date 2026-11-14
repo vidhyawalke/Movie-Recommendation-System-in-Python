@@ -1,197 +1,217 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" width="100%" height="100%">
   <defs>
-    <!-- Background Gradients -->
-    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0a0a12" />
-      <stop offset="40%" stop-color="#180a14" />
-      <stop offset="75%" stop-color="#240c18" />
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0e0712" />
+      <stop offset="45%" stop-color="#190610" />
+      <stop offset="80%" stop-color="#1a0a14" />
       <stop offset="100%" stop-color="#0d1117" />
     </linearGradient>
 
-    <linearGradient id="redAccent" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#e50914" />
-      <stop offset="50%" stop-color="#ff334b" />
-      <stop offset="100%" stop-color="#ff6b6b" />
+    <!-- Projector Beam Gradient -->
+    <linearGradient id="projectorBeam" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#fff2a8" stop-opacity="0.45" />
+      <stop offset="35%" stop-color="#ffd56b" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#ffd56b" stop-opacity="0.0" />
     </linearGradient>
 
-    <linearGradient id="goldAccent" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#f5c518" />
-      <stop offset="100%" stop-color="#ffdf73" />
+    <!-- Ticket Gradients -->
+    <linearGradient id="ticketRed" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d32f2f" />
+      <stop offset="100%" stop-color="#8b0000" />
+    </linearGradient>
+    <linearGradient id="ticketGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbc02d" />
+      <stop offset="100%" stop-color="#e65100" />
     </linearGradient>
 
-    <linearGradient id="beamGradient" x1="0%" y1="50%" x2="100%" y2="50%">
-      <stop offset="0%" stop-color="#ffdf73" stop-opacity="0.35" />
-      <stop offset="100%" stop-color="#ffdf73" stop-opacity="0.0" />
+    <!-- Clapperboard Gradient -->
+    <linearGradient id="clapperGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2d3748" />
+      <stop offset="100%" stop-color="#1a202c" />
     </linearGradient>
 
-    <linearGradient id="cardBg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.08" />
-      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.02" />
-    </linearGradient>
-
-    <!-- Glow filters -->
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="6" result="blur" />
+    <!-- Glow Filter -->
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
     </filter>
-
-    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+    <filter id="reelGlow" x="-20%" y="-20%" width="140%" height="140%">
       <feGaussianBlur stdDeviation="3" result="blur" />
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
     </filter>
 
-    <!-- Film Sprocket Pattern -->
-    <pattern id="sprocketTop" x="0" y="0" width="40" height="26" patternUnits="userSpaceOnUse">
-      <rect x="8" y="5" width="24" height="16" rx="3" fill="#ffffff" fill-opacity="0.15" />
-    </pattern>
-    <pattern id="sprocketBottom" x="0" y="0" width="40" height="26" patternUnits="userSpaceOnUse">
-      <rect x="8" y="5" width="24" height="16" rx="3" fill="#ffffff" fill-opacity="0.15" />
+    <!-- Sprocket Pattern for Film Borders -->
+    <pattern id="sprocket" x="0" y="0" width="36" height="24" patternUnits="userSpaceOnUse">
+      <rect x="7" y="4" width="22" height="16" rx="3" fill="#ffffff" fill-opacity="0.18" />
     </pattern>
   </defs>
 
-  <style>
-    .title-sub { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 14px; letter-spacing: 4px; font-weight: 700; fill: #f5c518; text-transform: uppercase; }
-    .title-main { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 46px; font-weight: 900; letter-spacing: -0.5px; fill: #ffffff; }
-    .title-tagline { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 18px; font-weight: 400; fill: #c9d1d9; }
-    .badge-text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 13px; font-weight: 600; fill: #ffffff; }
-    .badge-sub { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 11px; font-weight: 500; fill: #8b949e; }
-  </style>
-
   <!-- Base Canvas -->
-  <rect width="1200" height="400" rx="14" fill="url(#bgGradient)" stroke="#30363d" stroke-width="1.5" />
+  <rect width="1200" height="320" rx="12" fill="url(#bgGrad)" stroke="#30363d" stroke-width="1.5" />
 
   <!-- Top Film Strip Track -->
-  <rect x="0" y="0" width="1200" height="26" rx="14" fill="#000000" fill-opacity="0.6" />
-  <rect x="0" y="0" width="1200" height="26" fill="url(#sprocketTop)" />
-  <line x1="0" y1="26" x2="1200" y2="26" stroke="#ffffff" stroke-opacity="0.1" stroke-width="1" />
+  <rect x="0" y="0" width="1200" height="24" fill="#000000" fill-opacity="0.65" />
+  <rect x="0" y="0" width="1200" height="24" fill="url(#sprocket)" />
+  <line x1="0" y1="24" x2="1200" y2="24" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1" />
 
   <!-- Bottom Film Strip Track -->
-  <rect x="0" y="374" width="1200" height="26" rx="14" fill="#000000" fill-opacity="0.6" />
-  <rect x="0" y="374" width="1200" height="26" fill="url(#sprocketBottom)" />
-  <line x1="0" y1="374" x2="1200" y2="374" stroke="#ffffff" stroke-opacity="0.1" stroke-width="1" />
+  <rect x="0" y="296" width="1200" height="24" fill="#000000" fill-opacity="0.65" />
+  <rect x="0" y="296" width="1200" height="24" fill="url(#sprocket)" />
+  <line x1="0" y1="296" x2="1200" y2="296" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1" />
 
-  <!-- Background Cinema Projector Beam Effect -->
-  <polygon points="120,205 600,100 600,310" fill="url(#beamGradient)" />
+  <!-- Ambient Theatre Spotlight Rays from Top -->
+  <polygon points="280,24 200,296 420,296" fill="#ffd56b" fill-opacity="0.04" />
+  <polygon points="900,24 760,296 1020,296" fill="#ffd56b" fill-opacity="0.04" />
 
-  <!-- Vintage Cinema Projector Graphic (Left) -->
-  <g transform="translate(45, 125)">
-    <!-- Projector Reels -->
-    <circle cx="55" cy="50" r="32" fill="#161b22" stroke="#e50914" stroke-width="3.5" filter="url(#softGlow)" />
-    <circle cx="55" cy="50" r="12" fill="#21262d" stroke="#f5c518" stroke-width="2" />
-    <line x1="55" y1="22" x2="55" y2="78" stroke="#8b949e" stroke-width="2" />
-    <line x1="27" y1="50" x2="83" y2="50" stroke="#8b949e" stroke-width="2" />
-    <line x1="35" y1="30" x2="75" y2="70" stroke="#8b949e" stroke-width="2" />
-    <line x1="35" y1="70" x2="75" y2="30" stroke="#8b949e" stroke-width="2" />
+  <!-- Projector Light Cone -->
+  <polygon points="175,155 720,50 780,270" fill="url(#projectorBeam)" />
 
-    <circle cx="115" cy="40" r="26" fill="#161b22" stroke="#e50914" stroke-width="3" filter="url(#softGlow)" />
-    <circle cx="115" cy="40" r="9" fill="#21262d" stroke="#f5c518" stroke-width="1.8" />
-    <line x1="115" y1="16" x2="115" y2="64" stroke="#8b949e" stroke-width="1.8" />
-    <line x1="91" y1="40" x2="139" y2="40" stroke="#8b949e" stroke-width="1.8" />
-
-    <!-- Projector Body -->
-    <rect x="40" y="80" width="85" height="58" rx="6" fill="#161b22" stroke="#30363d" stroke-width="2" />
-    <rect x="48" y="90" width="26" height="20" rx="3" fill="#e50914" fill-opacity="0.3" stroke="#e50914" stroke-width="1" />
-    <circle cx="102" cy="100" r="6" fill="#f5c518" />
-    <circle cx="102" cy="120" r="4" fill="#388bfd" />
-
-    <!-- Lens Assembly -->
-    <polygon points="125,92 155,80 155,126 125,114" fill="#21262d" stroke="#f5c518" stroke-width="2" />
-    <ellipse cx="155" cy="103" rx="5" ry="23" fill="#ffdf73" filter="url(#glow)" />
-
+  <!-- Vintage Movie Projector (Left) -->
+  <g transform="translate(60, 65)">
     <!-- Tripod / Stand Base -->
-    <line x1="82" y1="138" x2="82" y2="185" stroke="#484f58" stroke-width="5" stroke-linecap="round" />
-    <line x1="82" y1="165" x2="45" y2="205" stroke="#484f58" stroke-width="4" stroke-linecap="round" />
-    <line x1="82" y1="165" x2="120" y2="205" stroke="#484f58" stroke-width="4" stroke-linecap="round" />
+    <line x1="75" y1="130" x2="75" y2="215" stroke="#4a5568" stroke-width="6" stroke-linecap="round" />
+    <line x1="75" y1="160" x2="25" y2="225" stroke="#4a5568" stroke-width="4.5" stroke-linecap="round" />
+    <line x1="75" y1="160" x2="125" y2="225" stroke="#4a5568" stroke-width="4.5" stroke-linecap="round" />
+
+    <!-- Big Reel (Top-Left) -->
+    <g transform="translate(40, 25)">
+      <circle cx="0" cy="0" r="38" fill="#171923" stroke="#e50914" stroke-width="4" filter="url(#reelGlow)" />
+      <circle cx="0" cy="0" r="14" fill="#2d3748" stroke="#f6ad55" stroke-width="2" />
+      <circle cx="0" cy="0" r="5" fill="#f6ad55" />
+      <line x1="0" y1="-38" x2="0" y2="38" stroke="#718096" stroke-width="2" />
+      <line x1="-38" y1="0" x2="38" y2="0" stroke="#718096" stroke-width="2" />
+      <line x1="-27" y1="-27" x2="27" y2="27" stroke="#718096" stroke-width="2" />
+      <line x1="-27" y1="27" x2="27" y2="-27" stroke="#718096" stroke-width="2" />
+      <circle cx="0" cy="-24" r="5" fill="#4a5568" />
+      <circle cx="0" cy="24" r="5" fill="#4a5568" />
+      <circle cx="-24" cy="0" r="5" fill="#4a5568" />
+      <circle cx="24" cy="0" r="5" fill="#4a5568" />
+    </g>
+
+    <!-- Small Reel (Top-Right) -->
+    <g transform="translate(105, 30)">
+      <circle cx="0" cy="0" r="30" fill="#171923" stroke="#e50914" stroke-width="3.5" filter="url(#reelGlow)" />
+      <circle cx="0" cy="0" r="11" fill="#2d3748" stroke="#f6ad55" stroke-width="1.8" />
+      <circle cx="0" cy="0" r="4" fill="#f6ad55" />
+      <line x1="0" y1="-30" x2="0" y2="30" stroke="#718096" stroke-width="1.8" />
+      <line x1="-30" y1="0" x2="30" y2="0" stroke="#718096" stroke-width="1.8" />
+      <line x1="-21" y1="-21" x2="21" y2="21" stroke="#718096" stroke-width="1.8" />
+      <line x1="-21" y1="21" x2="21" y2="-21" stroke="#718096" stroke-width="1.8" />
+    </g>
+
+    <!-- Projector Body Box -->
+    <rect x="25" y="65" width="95" height="65" rx="6" fill="#1a202c" stroke="#4a5568" stroke-width="2" />
+    <circle cx="50" cy="88" r="10" fill="#2d3748" stroke="#e50914" stroke-width="1.5" />
+    <circle cx="85" cy="85" r="5" fill="#f6ad55" />
+    <circle cx="85" cy="105" r="4" fill="#63b3ed" />
+
+    <!-- Projector Lens & Glow Cone Origin -->
+    <polygon points="120,78 150,68 150,118 120,108" fill="#2d3748" stroke="#f6ad55" stroke-width="2" />
+    <ellipse cx="150" cy="93" rx="5" ry="25" fill="#fff3a8" filter="url(#softGlow)" />
   </g>
 
-  <!-- Center Content Area -->
-  <g transform="translate(245, 75)">
-    <!-- Category Tag -->
-    <rect x="0" y="0" width="220" height="26" rx="13" fill="#e50914" fill-opacity="0.2" stroke="#e50914" stroke-width="1" />
-    <text x="16" y="17" class="title-sub" fill="#ff6b6b">MACHINE LEARNING</text>
+  <!-- Winding Cinema Film Ribbon Strip across center -->
+  <path d="M 280,180 Q 420,120 540,170 T 800,165 T 1060,140" fill="none" stroke="#e50914" stroke-width="3" stroke-dasharray="14 7" stroke-opacity="0.35" />
 
-    <!-- Main Title -->
-    <text x="0" y="65" class="title-main">Movie Recommendation System</text>
-    <text x="0" y="105" class="title-tagline">Real-time content matching and collaborative filtering on 25 million ratings</text>
+  <!-- Center Cinema Clapperboard -->
+  <g transform="translate(480, 75) rotate(-8)">
+    <!-- Clapperboard Base Board -->
+    <rect x="0" y="42" width="165" height="120" rx="6" fill="url(#clapperGrad)" stroke="#4a5568" stroke-width="2" />
+    
+    <!-- White Production Lines on Board -->
+    <line x1="15" y1="75" x2="150" y2="75" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2" />
+    <line x1="15" y1="110" x2="150" y2="110" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2" />
+    <line x1="80" y1="75" x2="80" y2="150" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2" />
+    <line x1="15" y1="145" x2="150" y2="145" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1.5" />
 
-    <!-- Value Cards / Feature Highlights -->
-    <g transform="translate(0, 135)">
-      <!-- Card 1: Corpus Size -->
-      <g transform="translate(0, 0)">
-        <rect x="0" y="0" width="205" height="72" rx="10" fill="url(#cardBg)" stroke="#30363d" stroke-width="1.2" />
-        <circle cx="28" cy="36" r="16" fill="#e50914" fill-opacity="0.2" />
-        <text x="28" y="42" text-anchor="middle" font-size="16" fill="#ff6b6b">&#127916;</text>
-        <text x="56" y="32" class="badge-text">62,423 Movies</text>
-        <text x="56" y="52" class="badge-sub">Full MovieLens 25M catalog</text>
-      </g>
-
-      <!-- Card 2: Ratings Scale -->
-      <g transform="translate(220, 0)">
-        <rect x="0" y="0" width="215" height="72" rx="10" fill="url(#cardBg)" stroke="#30363d" stroke-width="1.2" />
-        <circle cx="28" cy="36" r="16" fill="#f5c518" fill-opacity="0.2" />
-        <text x="28" y="42" text-anchor="middle" font-size="16" fill="#f5c518">&#9733;</text>
-        <text x="56" y="32" class="badge-text">25M User Ratings</text>
-        <text x="56" y="52" class="badge-sub">162,541 user preference profiles</text>
-      </g>
-
-      <!-- Card 3: Dual Engine -->
-      <g transform="translate(450, 0)">
-        <rect x="0" y="0" width="225" height="72" rx="10" fill="url(#cardBg)" stroke="#30363d" stroke-width="1.2" />
-        <circle cx="28" cy="36" r="16" fill="#388bfd" fill-opacity="0.2" />
-        <text x="28" y="42" text-anchor="middle" font-size="16" fill="#58a6ff">&#9881;</text>
-        <text x="56" y="32" class="badge-text">TF-IDF + Cosine Sim</text>
-        <text x="56" y="52" class="badge-sub">N-gram title search + CF scoring</text>
-      </g>
-
-      <!-- Card 4: Interactive UI -->
-      <g transform="translate(690, 0)">
-        <rect x="0" y="0" width="200" height="72" rx="10" fill="url(#cardBg)" stroke="#30363d" stroke-width="1.2" />
-        <circle cx="28" cy="36" r="16" fill="#3fb950" fill-opacity="0.2" />
-        <text x="28" y="42" text-anchor="middle" font-size="16" fill="#3fb950">&#9889;</text>
-        <text x="56" y="32" class="badge-text">Interactive UI</text>
-        <text x="56" y="52" class="badge-sub">Live search with ipywidgets</text>
-      </g>
+    <!-- Clapperboard Top Stick (Angled Up) -->
+    <g transform="translate(-4, 0) rotate(-16)">
+      <rect x="0" y="0" width="170" height="28" rx="4" fill="#1a202c" stroke="#4a5568" stroke-width="1.5" />
+      <!-- Black/White Diagonal Chevrons -->
+      <polygon points="18,0 36,0 18,28 0,28" fill="#ffffff" />
+      <polygon points="54,0 72,0 54,28 36,28" fill="#ffffff" />
+      <polygon points="90,0 108,0 90,28 72,28" fill="#ffffff" />
+      <polygon points="126,0 144,0 126,28 108,28" fill="#ffffff" />
+      <polygon points="162,0 170,0 162,28 144,28" fill="#ffffff" />
     </g>
 
-    <!-- Tech Stack Pill Row -->
-    <g transform="translate(0, 230)">
-      <text x="0" y="16" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-size="12" font-weight="600" fill="#8b949e">CORE STACK</text>
-      
-      <!-- Python Pill -->
-      <g transform="translate(95, 0)">
-        <rect x="0" y="0" width="85" height="24" rx="12" fill="#1f242c" stroke="#388bfd" stroke-width="1" />
-        <text x="42" y="16" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-size="11" font-weight="600" fill="#58a6ff">Python 3.11</text>
-      </g>
-
-      <!-- scikit-learn Pill -->
-      <g transform="translate(190, 0)">
-        <rect x="0" y="0" width="95" height="24" rx="12" fill="#1f242c" stroke="#f0883e" stroke-width="1" />
-        <text x="47" y="16" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-size="11" font-weight="600" fill="#f0883e">scikit-learn</text>
-      </g>
-
-      <!-- pandas Pill -->
-      <g transform="translate(295, 0)">
-        <rect x="0" y="0" width="75" height="24" rx="12" fill="#1f242c" stroke="#d2a8ff" stroke-width="1" />
-        <text x="37" y="16" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-size="11" font-weight="600" fill="#d2a8ff">pandas</text>
-      </g>
-
-      <!-- NumPy Pill -->
-      <g transform="translate(380, 0)">
-        <rect x="0" y="0" width="75" height="24" rx="12" fill="#1f242c" stroke="#79c0ff" stroke-width="1" />
-        <text x="37" y="16" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-size="11" font-weight="600" fill="#79c0ff">NumPy</text>
-      </g>
-
-      <!-- ipywidgets Pill -->
-      <g transform="translate(465, 0)">
-        <rect x="0" y="0" width="95" height="24" rx="12" fill="#1f242c" stroke="#56d364" stroke-width="1" />
-        <text x="47" y="16" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-size="11" font-weight="600" fill="#56d364">ipywidgets</text>
-      </g>
-
-      <!-- Jupyter Pill -->
-      <g transform="translate(570, 0)">
-        <rect x="0" y="0" width="80" height="24" rx="12" fill="#1f242c" stroke="#f5c518" stroke-width="1" />
-        <text x="40" y="16" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-size="11" font-weight="600" fill="#f5c518">Jupyter</text>
-      </g>
+    <!-- Clapperboard Lower Fixed Stick -->
+    <g transform="translate(0, 26)">
+      <rect x="0" y="0" width="165" height="18" fill="#1a202c" stroke="#4a5568" stroke-width="1.5" />
+      <polygon points="15,0 30,0 15,18 0,18" fill="#ffffff" />
+      <polygon points="45,0 60,0 45,18 30,18" fill="#ffffff" />
+      <polygon points="75,0 90,0 75,18 60,18" fill="#ffffff" />
+      <polygon points="105,0 120,0 105,18 90,18" fill="#ffffff" />
+      <polygon points="135,0 150,0 135,18 120,18" fill="#ffffff" />
     </g>
+    <!-- Hinge Pin -->
+    <circle cx="8" cy="24" r="5" fill="#e2e8f0" stroke="#4a5568" stroke-width="1.5" />
+  </g>
+
+  <!-- Cinema Popcorn Tub (Center-Right) -->
+  <g transform="translate(710, 85)">
+    <!-- Popcorn Tub Body -->
+    <polygon points="20,70 100,70 88,185 32,185" fill="#f7fafc" stroke="#e2e8f0" stroke-width="1.5" />
+    <!-- Red Stripes on Tub -->
+    <polygon points="34,70 48,70 44,185 32,185" fill="#e53e3e" />
+    <polygon points="56,70 68,70 64,185 52,185" fill="#e53e3e" />
+    <polygon points="76,70 88,70 84,185 72,185" fill="#e53e3e" />
+
+    <!-- Popcorn Kernels Cloud (Top) -->
+    <circle cx="35" cy="62" r="14" fill="#fefcbf" stroke="#f6e05e" stroke-width="1.5" />
+    <circle cx="50" cy="50" r="16" fill="#fffaf0" stroke="#f6e05e" stroke-width="1.5" />
+    <circle cx="70" cy="52" r="15" fill="#fefcbf" stroke="#f6e05e" stroke-width="1.5" />
+    <circle cx="85" cy="64" r="13" fill="#fffaf0" stroke="#f6e05e" stroke-width="1.5" />
+    <circle cx="42" cy="38" r="12" fill="#fefcbf" stroke="#f6e05e" stroke-width="1.5" />
+    <circle cx="62" cy="34" r="14" fill="#ffffff" stroke="#f6e05e" stroke-width="1.5" />
+    <circle cx="78" cy="40" r="12" fill="#fefcbf" stroke="#f6e05e" stroke-width="1.5" />
+  </g>
+
+  <!-- Classic 3D Anaglyph Glasses -->
+  <g transform="translate(850, 160) rotate(12)">
+    <rect x="0" y="0" width="140" height="42" rx="7" fill="#1a202c" stroke="#e2e8f0" stroke-width="2" />
+    <!-- Red Left Lens -->
+    <rect x="10" y="7" width="50" height="28" rx="4" fill="#e53e3e" fill-opacity="0.85" stroke="#9b2c2c" stroke-width="1.5" />
+    <!-- Cyan Right Lens -->
+    <rect x="80" y="7" width="50" height="28" rx="4" fill="#319795" fill-opacity="0.85" stroke="#234e52" stroke-width="1.5" />
+    <!-- Center Nose Bridge Cutout -->
+    <ellipse cx="70" cy="42" rx="10" ry="10" fill="#1a0a14" />
+  </g>
+
+  <!-- Cinema Admission Tickets (Right) -->
+  <g transform="translate(940, 55)">
+    <!-- Red Ticket 1 -->
+    <g transform="rotate(-18)">
+      <rect x="0" y="0" width="135" height="65" rx="5" fill="url(#ticketRed)" stroke="#ffd56b" stroke-width="1.5" />
+      <line x1="38" y1="0" x2="38" y2="65" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="4 3" stroke-opacity="0.7" />
+      <!-- Notches -->
+      <circle cx="38" cy="0" r="7" fill="#1a0a14" />
+      <circle cx="38" cy="65" r="7" fill="#1a0a14" />
+      <!-- Star on Ticket -->
+      <polygon points="85,22 88,31 97,31 90,36 93,45 85,39 77,45 80,36 73,31 82,31" fill="#ffd56b" />
+    </g>
+
+    <!-- Gold Ticket 2 -->
+    <g transform="translate(30, 48) rotate(14)">
+      <rect x="0" y="0" width="135" height="65" rx="5" fill="url(#ticketGold)" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.6" />
+      <line x1="38" y1="0" x2="38" y2="65" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="4 3" stroke-opacity="0.7" />
+      <!-- Notches -->
+      <circle cx="38" cy="0" r="7" fill="#1a0a14" />
+      <circle cx="38" cy="65" r="7" fill="#1a0a14" />
+      <!-- Star on Ticket -->
+      <polygon points="85,22 88,31 97,31 90,36 93,45 85,39 77,45 80,36 73,31 82,31" fill="#ffffff" fill-opacity="0.9" />
+    </g>
+  </g>
+
+  <!-- Decorative Cinema Stars & Sparkles -->
+  <g fill="#ffd56b" fill-opacity="0.5">
+    <polygon points="400,60 403,68 411,68 405,73 407,81 400,76 393,81 395,73 389,68 397,68" />
+    <polygon points="700,45 702,51 708,51 703,55 705,61 700,57 695,61 697,55 692,51 698,51" />
+    <polygon points="880,110 882,116 888,116 883,120 885,126 880,122 875,126 877,120 872,116 878,116" />
+    <circle cx="430" cy="240" r="2" />
+    <circle cx="650" cy="260" r="2.5" />
+    <circle cx="820" cy="270" r="1.5" />
+    <circle cx="920" cy="35" r="2" />
   </g>
 </svg>
