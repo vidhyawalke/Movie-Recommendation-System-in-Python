@@ -1,192 +1,217 @@
-# 🎬 Movie Recommendation System in Python
+<p align="center">
+  <img src="banner.png" alt="Movie Recommendation System" width="800"/>
+</p>
 
-An interactive, end-to-end movie recommendation engine built with the **MovieLens 25M dataset** — real data, real techniques, production-ready notebook.
+<h1 align="center">🎬 Movie Recommendation System in Python</h1>
 
-> Type a movie name → see live search results → get 10 hand-picked recommendations instantly.
+<p align="center">
+  An interactive, end-to-end movie recommendation engine built with the MovieLens 25M dataset.<br/>
+  Real data. Real techniques. Production-ready notebook.
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.9%2B-blue?style=flat-square&logo=python" />
+  <img src="https://img.shields.io/badge/scikit--learn-TF--IDF%20%7C%20Cosine%20Similarity-orange?style=flat-square&logo=scikit-learn" />
+  <img src="https://img.shields.io/badge/Dataset-MovieLens%2025M-green?style=flat-square" />
+  <img src="https://img.shields.io/badge/Notebook-Jupyter-F37626?style=flat-square&logo=jupyter" />
+  <img src="https://img.shields.io/badge/License-MIT-lightgrey?style=flat-square" />
+</p>
 
 ---
 
-## 📌 What This Project Does
+## Overview
 
-| Feature | Detail |
-|---------|--------|
-| **Search engine** | TF-IDF + cosine similarity with unigrams & bigrams |
-| **Recommendation engine** | Collaborative filtering on 25 million ratings |
-| **Interactive UI** | Live `ipywidgets` inside Jupyter — no page reload |
-| **Dataset** | [MovieLens 25M](https://grouplens.org/datasets/movielens/25m/) — 62K movies, 162K users |
+This project implements a two-part interactive movie recommendation system entirely in Python. The first part is a **content-based search engine** that uses TF-IDF vectorisation and cosine similarity to match a typed movie title against a corpus of 62,423 entries in real time. The second part is a **collaborative filtering recommendation engine** that mines 25 million user ratings to surface films that are disproportionately popular among audiences who share the same taste as you.
+
+Both components are wired to live Jupyter widgets so the entire experience — from search to recommendation — updates as you type, with no manual cell re-execution required.
 
 ---
 
-## 🗂️ Project Structure
+## Acknowledgement
+
+This project was guided by the structured walkthrough provided by **[Dataquest](https://www.dataquest.io/)** as part of their project-based learning curriculum:
+
+> [Build a Movie Recommendation System in Python](https://app.dataquest.io/c/93/m/99994/build-a-movie-recommendation-system-in-python/1/introduction) — Dataquest Intermediate Python Project (13 steps)
+
+The dataset used throughout this project is the **MovieLens 25M** dataset, published and maintained by the GroupLens research group at the University of Minnesota:
+
+> F. Maxwell Harper and Joseph A. Konstan. 2015. *The MovieLens Datasets: History and Context.* ACM Transactions on Interactive Intelligent Systems, 5(4): 19:1–19:19. [https://grouplens.org/datasets/movielens/25m/](https://grouplens.org/datasets/movielens/25m/)
+
+---
+
+## Dataset
+
+| File | Description | Size |
+|------|-------------|------|
+| `movies.csv` | 62,423 movies with title and genre metadata | 3 MB |
+| `ratings.csv` | 25,000,095 ratings from 162,541 users (scale: 0.5 to 5.0) | 650 MB |
+| `tags.csv` | User-generated tags applied to movies | 39 MB |
+| `genome-scores.csv` | Tag relevance scores for 13,816 movies | 435 MB |
+| `links.csv` | IMDb and TMDb identifiers for each movie | 1.4 MB |
+
+Download the full dataset as a single zip archive:
+[https://files.grouplens.org/datasets/movielens/ml-25m.zip](https://files.grouplens.org/datasets/movielens/ml-25m.zip)
+
+Place the extracted `ml-25m/` folder in the project root before running the notebook.
+
+---
+
+## Project Structure
 
 ```
 Movie Recommendation System in Python/
-├── movie_recommendations.ipynb   ← main notebook (run this)
-├── ml-25m/
-│   ├── movies.csv                ← 62,423 movies with titles & genres
-│   ├── ratings.csv               ← 25,000,095 user ratings
-│   ├── tags.csv
-│   ├── links.csv
-│   ├── genome-scores.csv
-│   └── genome-tags.csv
+├── movie_recommendations.ipynb   ← main notebook with all outputs
+├── banner.png                    ← project banner
+├── .gitignore                    ← excludes large dataset files
 └── README.md
 ```
 
+The `ml-25m/` dataset folder is listed in `.gitignore` and is not committed to the repository. Reviewers must download it separately using the link above.
+
 ---
 
-## ⚙️ How It Works
+## Methodology
 
-### Step 1 — Data Cleaning (Regex)
-Movie titles contain parentheses around years — e.g., `Toy Story (1995)`. We strip everything that isn't a letter, digit, or space using a simple regex so the search engine doesn't get confused by punctuation.
+### Part 1: Content-Based Movie Search
+
+**Data Cleaning with Regular Expressions**
+
+Movie titles in the dataset include year annotations in parentheses — for example, `Toy Story (1995)`. Before vectorisation, all non-alphanumeric characters (excluding spaces) are stripped using a regex substitution. This prevents punctuation from fragmenting tokens and ensures that the year is treated as a searchable term.
 
 ```python
 import re
 
-def clean_title(title):
+def clean_title(title: str) -> str:
     return re.sub(r"[^a-zA-Z0-9 ]", "", title)
 
-# "Toy Story (1995)" → "Toy Story 1995"
+# "Toy Story (1995)"  ->  "Toy Story 1995"
 ```
 
-### Step 2 — TF-IDF Matrix
-We convert all 62,423 cleaned titles into numeric vectors using **TF-IDF** (Term Frequency – Inverse Document Frequency). Setting `ngram_range=(1,2)` captures both single words and pairs (`toy story`, `story 1995`), making searches far more accurate.
+**TF-IDF Vectorisation**
 
-```python
-from sklearn.feature_extraction.text import TfidfVectorizer
+Cleaned titles are converted into sparse numerical vectors using scikit-learn's `TfidfVectorizer`. The `ngram_range=(1, 2)` parameter instructs the vectoriser to generate both unigrams and bigrams. This means the title *Toy Story 1995* yields individual tokens (`toy`, `story`, `1995`) as well as compound tokens (`toy story`, `story 1995`), substantially improving discrimination between similarly named films.
 
-vectorizer = TfidfVectorizer(ngram_range=(1, 2))
-tfidf = vectorizer.fit_transform(movies["clean_title"])
-```
+$$\text{TF-IDF}(t, d) = \text{TF}(t, d) \times \log\left(\frac{N}{\text{DF}(t)}\right)$$
 
-### Step 3 — Cosine Similarity Search
-When you type a title, we vectorise your query and find the top-5 closest movie vectors using cosine similarity.
+where $t$ is a term, $d$ is a document (title), $N$ is the total number of titles, and $\text{DF}(t)$ is the number of titles containing term $t$.
 
-```python
-from sklearn.metrics.pairwise import cosine_similarity
-import numpy as np
+**Cosine Similarity Search**
 
-def search(title):
-    query_vec = vectorizer.transform([clean_title(title)])
-    similarity = cosine_similarity(query_vec, tfidf).flatten()
-    indices = np.argpartition(similarity, -5)[-5:]
-    return movies.iloc[indices].iloc[::-1]
-```
+At query time the user's input is cleaned and transformed into the same vector space. Cosine similarity is computed between the query vector and every title vector in the matrix. The five titles with the highest similarity scores are returned.
 
-### Step 4 — Collaborative Filtering
-Once we know *which* movie you searched for, we:
-1. Find every user who rated that movie > 4 ⭐ (**similar users**)
-2. Find other movies those users also rated > 4 ⭐
-3. Keep only movies liked by > 10% of similar users
-4. Compare with the *whole* user base to compute a **score**:
+$$\cos(\theta) = \frac{\mathbf{q} \cdot \mathbf{d}}{\|\mathbf{q}\| \|\mathbf{d}\|}$$
 
-$$\text{score} = \frac{\text{% of similar users who liked the movie}}{\text{% of all users who liked the movie}}$$
+A value of 1.0 indicates identical direction (perfect match); 0 indicates orthogonality (no shared terms).
 
-A high score means a movie is specifically loved by people with your taste — not just generally popular.
+### Part 2: Collaborative Filtering Recommendation Engine
 
-```python
-def find_similar_movies(movie_id):
-    similar_users = ratings[
-        (ratings["movieId"] == movie_id) & (ratings["rating"] > 4)
-    ]["userId"].unique()
+**Finding Similar Users**
 
-    similar_user_recs = ratings[
-        (ratings["userId"].isin(similar_users)) & (ratings["rating"] > 4)
-    ]["movieId"].value_counts() / len(similar_users)
-    similar_user_recs = similar_user_recs[similar_user_recs > 0.10]
+For a given target film, the system identifies every user who assigned it a rating strictly greater than 4.0 (a threshold that selects genuine enthusiasm rather than neutral approval). These users form the *similar user cohort*.
 
-    all_users = ratings[
-        (ratings["movieId"].isin(similar_user_recs.index)) & (ratings["rating"] > 4)
-    ]
-    all_user_recs = all_users["movieId"].value_counts() / len(all_users["userId"].unique())
+**Candidate Movie Pool**
 
-    rec_percentages = pd.concat([similar_user_recs, all_user_recs], axis=1)
-    rec_percentages.columns = ["similar", "all"]
-    rec_percentages["score"] = rec_percentages["similar"] / rec_percentages["all"]
+Among the similar user cohort, the system tallies every other highly-rated film and divides by cohort size to obtain a *similar user percentage* per movie. Only films cleared by more than 10% of the cohort are retained as candidates, filtering out noise from low-signal ratings.
 
-    return (
-        rec_percentages.sort_values("score", ascending=False)
-        .head(10)
-        .merge(movies, left_index=True, right_on="movieId")[["score", "title", "genres"]]
-    )
-```
+**Niche Scoring**
 
-### Step 5 — Interactive Widgets
-Both the search box and recommendation output are powered by `ipywidgets` — they update live as you type, no button press required.
+The same percentage is computed across the full user population for each candidate film. The two percentages are combined into a *recommendation score*:
+
+$$\text{score}(m) = \frac{P(\text{similar users liked } m)}{P(\text{all users liked } m)}$$
+
+A high score indicates that a film is specifically overrepresented in the taste profile of people who liked the target — not merely a broadly popular title. The top 10 candidates by score are returned as final recommendations.
 
 ---
 
-## 🚀 Quickstart
+## Sample Output
 
-### 1. Clone the repo
+The following recommendations are produced when searching for **The Avengers (2012)**:
+
+| Rank | Score | Title | Genres |
+|------|-------|-------|--------|
+| 1 | 24.72 | Avengers, The (2012) | Action, Adventure, Sci-Fi, IMAX |
+| 2 | 19.61 | Thor: The Dark World (2013) | Action, Adventure, Fantasy, IMAX |
+| 3 | 19.49 | Avengers: Age of Ultron (2015) | Action, Adventure, Sci-Fi |
+| 4 | 17.87 | Iron Man 3 (2013) | Action, Sci-Fi, Thriller, IMAX |
+| 5 | 17.84 | Captain America: The First Avenger (2011) | Action, Adventure, Sci-Fi |
+| 6 | 17.30 | Thor (2011) | Action, Adventure, Drama, Fantasy |
+| 7 | 17.18 | Captain America: The Winter Soldier (2014) | Action, Adventure, Sci-Fi, IMAX |
+| 8 | 16.65 | Captain America: Civil War (2016) | Action, Sci-Fi, Thriller |
+| 9 | 15.87 | Ant-Man (2015) | Action, Adventure, Sci-Fi |
+| 10 | 15.65 | Iron Man 2 (2010) | Action, Adventure, Sci-Fi, Thriller |
+
+The score of 24.72 for The Avengers itself confirms the system is anchoring on the correct movie. All remaining recommendations are thematically coherent MCU titles — a strong validation of the collaborative filtering signal.
+
+---
+
+## Quickstart
+
+**1. Clone the repository**
+
 ```bash
 git clone https://github.com/vidhyawalke/Movie-Recommendation-System-in-Python.git
 cd "Movie Recommendation System in Python"
 ```
 
-### 2. Download the dataset
-Download the [MovieLens 25M zip](https://files.grouplens.org/datasets/movielens/ml-25m.zip), unzip it, and place the `ml-25m/` folder inside the project directory.
+**2. Download the dataset**
 
-### 3. Install dependencies
 ```bash
-pip install pandas scikit-learn ipywidgets notebook
+# Linux / macOS
+curl -O https://files.grouplens.org/datasets/movielens/ml-25m.zip
+unzip ml-25m.zip
+
+# Windows (PowerShell)
+Invoke-WebRequest -Uri https://files.grouplens.org/datasets/movielens/ml-25m.zip -OutFile ml-25m.zip
+Expand-Archive ml-25m.zip
 ```
 
-### 4. Launch the notebook
+**3. Install dependencies**
+
+```bash
+pip install pandas scikit-learn numpy ipywidgets notebook
+```
+
+**4. Launch the notebook**
+
 ```bash
 jupyter notebook movie_recommendations.ipynb
 ```
 
-Run all cells from top to bottom. Use the widget in **Cell 5** to search for movies and **Cell 9** to get recommendations.
+Run all cells from top to bottom. The interactive search widget is in **Cell 5** and the full recommendation widget is in **Cell 9**.
 
 ---
 
-## 📊 Sample Output
+## Tech Stack
 
-Searching for **The Avengers (2012)** returns:
-
-| Score | Title | Genres |
-|-------|-------|--------|
-| 24.7 | Avengers, The (2012) | Action, Adventure, Sci-Fi |
-| 19.6 | Thor: The Dark World (2013) | Action, Adventure, Fantasy |
-| 19.5 | Avengers: Age of Ultron (2015) | Action, Adventure, Sci-Fi |
-| 17.9 | Iron Man 3 (2013) | Action, Sci-Fi, Thriller |
-| 17.8 | Captain America: The First Avenger (2011) | Action, Adventure, Sci-Fi |
-| 17.3 | Thor (2011) | Action, Adventure, Fantasy |
-| 17.2 | Captain America: The Winter Soldier (2014) | Action, Adventure, Sci-Fi |
-| 16.6 | Captain America: Civil War (2016) | Action, Sci-Fi, Thriller |
-| 15.9 | Ant-Man (2015) | Action, Adventure, Sci-Fi |
-| 15.7 | Iron Man 2 (2010) | Action, Adventure, Sci-Fi |
+| Layer | Technology |
+|-------|------------|
+| Data manipulation | pandas |
+| Vectorisation | scikit-learn TfidfVectorizer |
+| Similarity computation | scikit-learn cosine_similarity |
+| Numerical operations | NumPy |
+| Interactive UI | ipywidgets |
+| Notebook environment | Jupyter Notebook |
 
 ---
 
-## 🛠️ Tech Stack
+## Potential Extensions
 
-- **Python 3.9+**
-- **pandas** — data loading and manipulation
-- **scikit-learn** — TF-IDF vectorisation and cosine similarity
-- **NumPy** — fast array operations
-- **ipywidgets** — live interactive UI inside Jupyter
-- **Jupyter Notebook** — interactive computing environment
+The scoring framework developed here is extensible in several directions:
 
----
-
-## 📈 Ideas for Extension
-
-- Add a **genre filter** dropdown widget
-- Use `genome-scores.csv` for tag-relevance weighting
-- Build a **Streamlit** or **Gradio** web app for browser-based access
-- Try **matrix factorisation** (SVD) for a model-based approach
+- **Genre-aware filtering**: Add a dropdown widget that filters recommendations by genre, using the pipe-delimited genre field already present in `movies.csv`.
+- **Tag-based content signals**: Incorporate `genome-scores.csv`, which provides continuous relevance scores for 1,128 tags across 13,816 movies, to weight the collaborative signal with semantic similarity.
+- **Matrix factorisation**: Replace the percentage-based heuristic with a proper latent factor model (e.g. SVD via `scipy.sparse.linalg`) for more generalised user-to-movie projections.
+- **Web deployment**: Wrap the two functions in a Streamlit or Gradio app for a shareable browser-based interface without requiring Jupyter.
 
 ---
 
-## 📄 Dataset Credit
+## Getting Help
 
-F. Maxwell Harper and Joseph A. Konstan. 2015. The MovieLens Datasets: History and Context. *ACM Transactions on Interactive Intelligent Systems*, 5(4):19:1–19:19.  
-[https://grouplens.org/datasets/movielens/25m/](https://grouplens.org/datasets/movielens/25m/)
+If you encounter issues or have questions, please open a [GitHub Issue](https://github.com/vidhyawalke/Movie-Recommendation-System-in-Python/issues).
 
 ---
 
-## 👤 Author
+## Maintainer
 
-**Vidhya Walke**  
-GitHub: [@vidhyawalke](https://github.com/vidhyawalke)
+Built and maintained by [Vidhya Walke](https://github.com/vidhyawalke).  
+Contributions, bug reports, and suggestions are welcome via pull request or issue.
