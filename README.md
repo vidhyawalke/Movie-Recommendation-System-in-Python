@@ -53,9 +53,9 @@ Place the extracted `ml-25m/` folder in the project root before running the note
 
 ```
 Movie Recommendation System in Python/
-├── movie_recommendations.ipynb   (main notebook with all rendered outputs)
-├── banner.svg                    (high-resolution vector banner)
-├── .gitignore                    (excludes ml-25m dataset files and cache)
+├── movie_recommendations.ipynb
+├── banner.svg
+├── .gitignore
 └── README.md
 ```
 
